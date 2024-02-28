@@ -8,6 +8,7 @@ import { CategoryEntity } from './entities/category.entity';
 
 @Injectable()
 export class CategoryService {
+  remove: any;
   constructor(
     @InjectRepository(CategoryEntity)
     private repository: Repository<CategoryEntity>,
@@ -28,7 +29,7 @@ export class CategoryService {
   async update(id: number, dto: UpdateCategoryDto) {
     const toUpdate = await this.repository.findOneBy({ id }); // findOneBy чтобы не выдавать пользователю большой код, который выдала база данных
     if (!toUpdate) {
-      throw new BadRequestException(`Запись с id=${id} не найдена`);
+      throw new BadRequestException(`Запись id=${id} не найдена`);
     }
     if (dto.name) {
       toUpdate.name = dto.name; //существует ли тот столбец в бд который хочет изменить клиент
