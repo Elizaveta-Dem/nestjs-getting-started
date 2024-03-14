@@ -11,7 +11,7 @@ import {
   UploadedFile,
   Response,
 } from '@nestjs/common';
-import { ApiConsumes, ApiQuery, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiConsumes, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { DeleteResult } from 'typeorm';
 
@@ -28,6 +28,7 @@ export class ProductController {
 
   @Post()
   @ApiConsumes('multipart/form-data')
+  @ApiBearerAuth()
   @UseInterceptors(FileInterceptor('image', { storage: fileStorage }))
   create(
     @Body() dto: CreateProductDto,
@@ -55,6 +56,7 @@ export class ProductController {
 
   @Patch(':id')
   @ApiConsumes('multipart/form-data')
+  @ApiBearerAuth()
   @UseInterceptors(FileInterceptor('image', { storage: fileStorage }))
   update(
     @Param('id') id: string,
@@ -65,6 +67,7 @@ export class ProductController {
   }
 
   @Delete(':id')
+  @ApiBearerAuth()
   delete(@Param('id') id: string): Promise<DeleteResult> {
     return this.productService.delete(+id);
   }

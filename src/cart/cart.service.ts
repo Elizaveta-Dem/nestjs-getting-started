@@ -6,43 +6,19 @@ import { CartEntity } from './entities/cart.entity';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 
-// @Injectable()
-// export class CartService {
-//   findByCategoryId: any;
-//   create(createCartDto: CreateCartDto) {
-//     return 'This action adds a new cart';
-//   }
-
 @Injectable()
 export class CartService {
+  calculateTotalPrice(): number | PromiseLike<number> {
+    throw new Error('Method not implemented.');
+  }
   constructor(
     @InjectRepository(CartEntity)
     private cartRepository: Repository<CartEntity>,
   ) {}
 
-  // eslint-disable-next-line prettier/prettier
-  async create(dto: CreateCartDto, image: Express.Multer.File): Promise<CartEntity> {
-    return this.cartRepository.save(CreateCartDto);
+  async create(dto: CreateCartDto): Promise<CartEntity> {
+    return this.cartRepository.save(dto);
   }
-
-  // async create(dto: CreateCartDto): Promise<CartEntity> {
-  //   const newCart = await this.cartRepository.create(createCartDto);
-  //   return await this.cartRepository.save(newCart);
-  // }
-
-  // async create(
-  //   dto: CreateCartDto,
-  //   image: Express.Multer.File,
-  // ): Promise<CartEntity> {
-  //   const cart = new CartEntity();
-  //   cart.image = image.filename;
-  //   cart.quantity = dto.quantity;
-  //   cart.prices = dto.prices;
-
-  //   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  //   const newCart = await this.cartRepository.save(cart);
-  //   return newCart;
-  // }
 
   async findAll(): Promise<CartEntity[]> {
     return this.cartRepository.find();
@@ -52,7 +28,7 @@ export class CartService {
     return this.cartRepository.findOneBy({ id });
   }
 
-  async update(id: number, dto: UpdateCartDto, image: Express.Multer.File) {
+  async update(id: number, dto: UpdateCartDto) {
     const toUpdate = await this.cartRepository.findOneBy({ id });
     if (!toUpdate) {
       throw new BadRequestException(`Запись id=${id} не найдена`);
@@ -63,4 +39,13 @@ export class CartService {
   remove(id: number) {
     return this.cartRepository.delete(id);
   }
+
+  // async calculateTotalPrice(userId: number): Promise<number> {
+  //   const cartItems = await this.cartRepository.find();
+  //   let totalPrice = 0;
+  //   cartItems.forEach((item) => {
+  //     totalPrice += item.prices * item.quantity;
+  //   });
+  //   return totalPrice;
+  // }
 }

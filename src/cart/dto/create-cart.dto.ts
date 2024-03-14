@@ -4,17 +4,6 @@ import { ApiProperty } from '@nestjs/swagger';
 import { IsNumber, IsArray, IsPositive } from 'class-validator';
 
 export class CreateCartDto {
-  //   @ApiProperty({
-  //     type: 'file',
-  //     properties: {
-  //       file: {
-  //         type: 'string',
-  //         format: 'binary',
-  //       },
-  //     },
-  //   })
-  //   image: Express.Multer.File;
-
   @ApiProperty()
   @IsNumber()
   productid: number;
@@ -24,12 +13,4 @@ export class CreateCartDto {
   @IsNumber()
   quantity: number;
   prices: any;
-
-  //   @ApiProperty()
-  //   @IsString()
-  //   name: string = 'Название товара';
-
-  //   @ApiProperty()
-  //   @IsNumber()
-  //   prices: number = 150;
 }

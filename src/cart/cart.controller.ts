@@ -6,21 +6,16 @@ import {
   Patch,
   Param,
   Delete,
-  // Query,
-  UseInterceptors,
-  UploadedFile,
-  Response,
+  UseGuards,
 } from '@nestjs/common';
-import { ApiConsumes, ApiTags } from '@nestjs/swagger';
-// import { ApiQuery } from '@nestjs/swagger';
-import { FileInterceptor } from '@nestjs/platform-express';
+import { ApiBearerAuth, ApiConsumes, ApiTags } from '@nestjs/swagger';
 import { DeleteResult } from 'typeorm';
 
 import { CartService } from './cart.service';
 import { CreateCartDto } from './dto/create-cart.dto';
 import { UpdateCartDto } from './dto/update-cart.dto';
 import { CartEntity } from './entities/cart.entity';
-import { fileStorage } from './storage';
+import { JwtAuthGuard } from 'src/auth/guards/jwt.guard';
 
 @ApiTags('cart')
 @Controller('cart')
@@ -29,54 +24,42 @@ export class CartController {
 
   @Post()
   @ApiConsumes('multipart/form-data')
-  @UseInterceptors(FileInterceptor('image', { storage: fileStorage }))
-  create(
-    @Body() dto: CreateCartDto,
-    @UploadedFile() image: Express.Multer.File,
-  ): Promise<CartEntity> {
-    return this.cartService.create(dto, image);
-  }
-
-  @Get('/image/:path')
-  download(@Param('path') path: string, @Response() response) {
-    return response.sendFile(path, { root: './db_images/cart' });
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
+  create(@Body() dto: CreateCartDto): Promise<CartEntity> {
+    return this.cartService.create(dto);
   }
 
   @Get()
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
   findAll() {
     return this.cartService.findAll();
   }
 
-  // @Get()
-  // @ApiQuery({ name: 'categoryId', required: false })
-  // findAll(@Query('categoryId') categoryId: number): Promise<CartEntity[]> {
-  //   if (categoryId) return this.cartService.findByCategoryId(categoryId);
-  //   else return this.cartService.findAll();
-  // }
-
   @Get(':id')
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
   findOne(@Param('id') id: string): Promise<CartEntity> {
     return this.cartService.findOne(+id);
   }
 
-  // @Patch(':id')
-  // update(@Param('id') id: string, @Body() updateCartDto: UpdateCartDto) {
-  //   return this.cartService.update(+id, updateCartDto);
-  // }
-
   @Patch(':id')
-  @ApiConsumes('multipart/form-data')
-  @UseInterceptors(FileInterceptor('image', { storage: fileStorage }))
-  update(
-    @Param('id') id: string,
-    @Body() dto: UpdateCartDto,
-    @UploadedFile() image: Express.Multer.File,
-  ): Promise<CartEntity> {
-    return this.cartService.update(+id, dto, image);
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
+  update(@Param('id') id: string, @Body() dto: UpdateCartDto) {
+    return this.cartService.update(+id, dto);
   }
 
   @Delete(':id')
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
   remove(@Param('id') id: string): Promise<DeleteResult> {
     return this.cartService.remove(+id);
   }
+
+  // @Get('totalPrice')
+  // async totalPrice(): Promise<number> {
+  //   return this.cartService.calculateTotalPrice();
+  // }
 }

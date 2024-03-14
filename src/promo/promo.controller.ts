@@ -10,7 +10,7 @@ import {
   UploadedFile,
   Response,
 } from '@nestjs/common';
-import { ApiTags, ApiConsumes } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiTags, ApiConsumes } from '@nestjs/swagger';
 import { FileInterceptor } from '@nestjs/platform-express';
 
 import { PromoService } from './promo.service';
@@ -27,6 +27,7 @@ export class PromoController {
 
   @Post()
   @ApiConsumes('multipart/form-data')
+  @ApiBearerAuth()
   @UseInterceptors(FileInterceptor('image', { storage: fileStorage }))
   create(
     @Body() dto: CreatePromoDto,
@@ -52,6 +53,7 @@ export class PromoController {
 
   @Patch(':id')
   @ApiConsumes('multipart/form-data')
+  @ApiBearerAuth()
   @UseInterceptors(FileInterceptor('image', { storage: fileStorage }))
   update(
     @Param('id') id: string,
@@ -62,6 +64,7 @@ export class PromoController {
   }
 
   @Delete(':id')
+  @ApiBearerAuth()
   remove(@Param('id') id: string): Promise<DeleteResult> {
     return this.promoService.delete(+id);
   }

@@ -23,8 +23,8 @@ export class ProductEntity {
   @Column()
   description: string;
 
-  @Column('int')
-  prices: number;
+  @Column()
+  prices: string;
 
   @ManyToOne(() => CategoryEntity, (category) => category.products, {
     eager: true,

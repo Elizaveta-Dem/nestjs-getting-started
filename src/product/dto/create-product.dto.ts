@@ -24,8 +24,8 @@ export class CreateProductDto {
   description: string = 'Описание';
 
   @ApiProperty()
-  @IsNumber()
-  prices: number = 150;
+  @IsString()
+  prices: string;
 
   @ApiProperty()
   @IsNumberString()

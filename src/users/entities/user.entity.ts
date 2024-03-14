@@ -1,8 +1,10 @@
 /* eslint-disable prettier/prettier */
+import { CartEntity } from 'src/cart/entities/cart.entity';
 import {
     Column,
     CreateDateColumn,
     Entity,
+    OneToOne,
     PrimaryGeneratedColumn,
     UpdateDateColumn,
   } from 'typeorm';
@@ -23,4 +25,8 @@ import {
   
     @UpdateDateColumn({ type: 'timestamp' })
     updatedAt: Date;
+    cart: any;
+    
+    @OneToOne(() => CartEntity, cart => cart.users) 
+    carts: CartEntity[];
   }
