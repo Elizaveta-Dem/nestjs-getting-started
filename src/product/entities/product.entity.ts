@@ -8,6 +8,7 @@ import {
 
 import { CategoryEntity } from 'src/category/entities/category.entity';
 import { CartEntity } from 'src/cart/entities/cart.entity';
+import { OrderItemEntity } from 'src/order/entities/orderitem.entity';
 
 @Entity('product')
 export class ProductEntity {
@@ -33,5 +34,10 @@ export class ProductEntity {
   category: CategoryEntity;
 
   @ManyToOne(() => CartEntity, (cart) => cart.products)
-  cart: CartEntity;
+  @JoinColumn()
+  carts: CartEntity;
+
+  @ManyToOne(() => OrderItemEntity, (orderItem) => orderItem.products)
+  @JoinColumn()
+  orderItem: OrderItemEntity;
 }

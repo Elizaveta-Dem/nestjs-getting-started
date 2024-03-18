@@ -1,6 +1,5 @@
 /* eslint-disable prettier/prettier */
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { ApiHideProperty } from '@nestjs/swagger';
 import { ProductEntity } from 'src/product/entities/product.entity';
 import { UserEntity } from 'src/users/entities/user.entity';
 import {
@@ -24,8 +23,8 @@ export class CartEntity {
     @Column('int')
     prices: number;
 
-    // @Column()
-    // totalPrice: number;
+    @Column()
+    totalPrice: number;
 
     @Column()
     productid: number;
@@ -36,11 +35,12 @@ export class CartEntity {
     @CreateDateColumn({ type: 'timestamp' })
     createdAt: Date;
 
-    @OneToOne(() => UserEntity, (user => user.cart))
+    @OneToOne(() => UserEntity, (user => user.carts))
     @JoinColumn({name: 'userid'})
     users: UserEntity;
 
-    @ApiHideProperty()
-    @OneToMany(() => ProductEntity, (product) => product.cart)
+    @OneToMany(() => ProductEntity, (product) => product.carts)
     products: ProductEntity[];
+  user: UserEntity;
+  destroy: any;
   }

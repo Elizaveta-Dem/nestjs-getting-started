@@ -14,9 +14,11 @@ export class CreatePromoDto {
   })
   image: Express.Multer.File;
 
+  @ApiProperty()
   @IsString()
   title: string = 'Название акции';
 
+  @ApiProperty()
   @IsString()
   text: string = 'Описание акции';
 }

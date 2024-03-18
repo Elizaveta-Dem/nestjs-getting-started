@@ -9,6 +9,10 @@ export class CreateCartDto {
   productid: number;
 
   @ApiProperty()
+  @IsNumber()
+  userid: number;
+
+  @ApiProperty()
   @IsPositive()
   @IsNumber()
   quantity: number;
