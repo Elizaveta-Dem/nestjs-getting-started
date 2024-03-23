@@ -43,4 +43,5 @@ export class CartEntity {
     products: ProductEntity[];
   user: UserEntity;
   destroy: any;
+  orderItem: any;
   }

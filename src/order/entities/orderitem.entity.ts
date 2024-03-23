@@ -1,20 +1,22 @@
 /* eslint-disable prettier/prettier */
-import { ProductEntity } from 'src/product/entities/product.entity';
-// import { UserEntity } from 'src/users/entities/user.entity';
+// import { ProductEntity } from 'src/product/entities/product.entity';
 import {
   Column,
   CreateDateColumn,
   Entity,
-  OneToMany,
-  // OneToOne,
+  // OneToMany,
   PrimaryGeneratedColumn,
   JoinColumn,
   ManyToOne,
+  OneToOne,
 } from 'typeorm';
 import { OrderEntity } from './order.entity';
+import { UserEntity } from 'src/users/entities/user.entity';
+import { CartEntity } from 'src/cart/entities/cart.entity';
 
 @Entity('orderItem')
 export class OrderItemEntity {
+  [x: string]: any;
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -39,11 +41,15 @@ export class OrderItemEntity {
   @CreateDateColumn({ type: 'timestamp' })
   createdAt: Date;
 
-  // @OneToOne(() => UserEntity, (user) => user.orderItem)
-  // @JoinColumn({ name: 'userid' })
-  // users: UserEntity;
+  @OneToOne(() => UserEntity, (user) => user.orderItem)
+  @JoinColumn({ name: 'userid' })
+  users: UserEntity;
 
-  @OneToMany(() => ProductEntity, (product) => product.orderItem)
+  @OneToOne(() => CartEntity, (cart) => cart.orderItem)
   @JoinColumn()
-  products: ProductEntity[];
+  carts: CartEntity;
+
+  // @OneToMany(() => ProductEntity, (product) => product.orderItem)
+  // @JoinColumn()
+  // products: ProductEntity[];
 }
