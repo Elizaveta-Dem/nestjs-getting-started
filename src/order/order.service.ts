@@ -37,9 +37,9 @@ export class OrderService {
     return this.orderRepository.save(order);
   }
 
-  async findAll(): Promise<OrderEntity[]> {
-    return this.orderRepository.find();
-  }
+  // async findAll(): Promise<OrderEntity[]> {
+  //   return this.orderRepository.find();
+  // }
 
   async findOne(id: number): Promise<OrderEntity> {
     return this.orderRepository.findOneBy({ id });

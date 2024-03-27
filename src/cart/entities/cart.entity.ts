@@ -1,5 +1,6 @@
 /* eslint-disable prettier/prettier */
 /* eslint-disable @typescript-eslint/no-unused-vars */
+import { OrderItemEntity } from 'src/order/entities/orderitem.entity';
 import { ProductEntity } from 'src/product/entities/product.entity';
 import { UserEntity } from 'src/users/entities/user.entity';
 import {
@@ -43,5 +44,8 @@ export class CartEntity {
     products: ProductEntity[];
   user: UserEntity;
   destroy: any;
-  orderItem: any;
+
+    @OneToOne(() => OrderItemEntity, (orderItem) => orderItem.carts)
+    @JoinColumn()
+    orderItem: OrderItemEntity;
   }

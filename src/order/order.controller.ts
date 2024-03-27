@@ -28,12 +28,12 @@ export class OrderController {
     return this.orderService.createOrder(createOrderDto);
   }
 
-  @Get()
-  @UseGuards(JwtAuthGuard)
-  @ApiBearerAuth()
-  findAll() {
-    return this.orderService.findAll();
-  }
+  // @Get()
+  // @UseGuards(JwtAuthGuard)
+  // @ApiBearerAuth()
+  // findAll() {
+  //   return this.orderService.findAll();
+  // }
 
   @Get(':id')
   @UseGuards(JwtAuthGuard)

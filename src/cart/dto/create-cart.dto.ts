@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-inferrable-types */
 import { ApiProperty } from '@nestjs/swagger';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-import { IsNumber, IsArray, IsPositive } from 'class-validator';
+import { IsNumber, IsPositive } from 'class-validator';
 
 export class CreateCartDto {
   @ApiProperty()
