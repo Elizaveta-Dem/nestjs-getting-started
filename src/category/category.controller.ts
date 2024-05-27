@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import {
   Controller,
   Get,
@@ -41,15 +42,6 @@ export class CategoryController {
     return this.categoryService.create(dto, image);
   }
 
-  // @Roles('admin')
-  // @UseGuards(RolesGuard)
-  // @UseGuards(JwtAuthGuard)
-  // @ApiBearerAuth()
-  // @Post()
-  // create(@Body() dto: CreateCategoryDto) {
-  //   return this.categoryService.create(dto);
-  // }
-
   @Get('/image/:path')
   download(@Param('path') path: string, @Response() response) {
     return response.sendFile(path, { root: './db_images/category' });
@@ -79,18 +71,6 @@ export class CategoryController {
   ): Promise<CategoryEntity> {
     return this.categoryService.update(+id, dto, image);
   }
-
-  // @Roles('admin')
-  // @UseGuards(RolesGuard)
-  // @UseGuards(JwtAuthGuard)
-  // @ApiBearerAuth()
-  // @Patch(':id')
-  // update(
-  //   @Param('id') id: string,
-  //   @Body() updateCategoryDto: UpdateCategoryDto,
-  // ) {
-  //   return this.categoryService.update(+id, updateCategoryDto);
-  // }
 
   @Roles('admin')
   @UseGuards(RolesGuard)
