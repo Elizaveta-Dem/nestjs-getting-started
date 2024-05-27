@@ -10,6 +10,7 @@ import {
   UseInterceptors,
   UploadedFile,
   Response,
+  UseGuards,
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiConsumes, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { FileInterceptor } from '@nestjs/platform-express';
@@ -20,12 +21,18 @@ import { ProductService } from './product.service';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { ProductEntity } from './entities/product.entity';
+import { JwtAuthGuard } from 'src/auth/guards/jwt.guard';
+import { RolesGuard } from 'src/auth/guards/roles.guards';
+import { Roles } from 'src/decorators/role-auth.decorator';
 
 @ApiTags('product')
 @Controller('product')
 export class ProductController {
   constructor(private readonly productService: ProductService) {}
 
+  @Roles('admin')
+  @UseGuards(JwtAuthGuard)
+  @UseGuards(RolesGuard)
   @Post()
   @ApiConsumes('multipart/form-data')
   @ApiBearerAuth()
@@ -54,6 +61,9 @@ export class ProductController {
     return this.productService.findOne(+id);
   }
 
+  @Roles('admin')
+  @UseGuards(JwtAuthGuard)
+  @UseGuards(RolesGuard)
   @Patch(':id')
   @ApiConsumes('multipart/form-data')
   @ApiBearerAuth()
@@ -66,6 +76,9 @@ export class ProductController {
     return this.productService.update(+id, dto, image);
   }
 
+  @Roles('admin')
+  @UseGuards(JwtAuthGuard)
+  @UseGuards(RolesGuard)
   @Delete(':id')
   @ApiBearerAuth()
   delete(@Param('id') id: string): Promise<DeleteResult> {

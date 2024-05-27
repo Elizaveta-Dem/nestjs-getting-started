@@ -6,21 +6,53 @@ import {
   Patch,
   Param,
   Delete,
+  Response,
+  UseGuards,
+  UploadedFile,
+  UseInterceptors,
 } from '@nestjs/common';
 import { CategoryService } from './category.service';
 import { CreateCategoryDto } from './dto/create-category.dto';
 import { UpdateCategoryDto } from './dto/update-category.dto';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiConsumes, ApiTags } from '@nestjs/swagger';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { JwtAuthGuard } from 'src/auth/guards/jwt.guard';
+import { RolesGuard } from 'src/auth/guards/roles.guards';
+import { Roles } from 'src/decorators/role-auth.decorator';
+import { CategoryEntity } from './entities/category.entity';
+import { fileStorage_cat } from 'src/product/storage';
 
 @ApiTags('category')
 @Controller('category')
 export class CategoryController {
   constructor(private readonly categoryService: CategoryService) {}
 
+  @Roles('admin')
+  @UseGuards(RolesGuard)
+  @UseGuards(JwtAuthGuard)
   @Post()
+  @ApiConsumes('multipart/form-data')
   @ApiBearerAuth()
-  create(@Body() dto: CreateCategoryDto) {
-    return this.categoryService.create(dto);
+  @UseInterceptors(FileInterceptor('image', { storage: fileStorage_cat }))
+  create(
+    @Body() dto: CreateCategoryDto,
+    @UploadedFile() image: Express.Multer.File,
+  ): Promise<CategoryEntity> {
+    return this.categoryService.create(dto, image);
+  }
+
+  // @Roles('admin')
+  // @UseGuards(RolesGuard)
+  // @UseGuards(JwtAuthGuard)
+  // @ApiBearerAuth()
+  // @Post()
+  // create(@Body() dto: CreateCategoryDto) {
+  //   return this.categoryService.create(dto);
+  // }
+
+  @Get('/image/:path')
+  download(@Param('path') path: string, @Response() response) {
+    return response.sendFile(path, { root: './db_images/category' });
   }
 
   @Get()
@@ -33,18 +65,39 @@ export class CategoryController {
     return this.categoryService.findOne(+id);
   }
 
-  @Patch(':id')
+  @Roles('admin')
+  @UseGuards(RolesGuard)
+  @UseGuards(JwtAuthGuard)
   @ApiBearerAuth()
+  @Patch(':id')
+  @ApiConsumes('multipart/form-data')
+  @UseInterceptors(FileInterceptor('image', { storage: fileStorage_cat }))
   update(
     @Param('id') id: string,
-    @Body() updateCategoryDto: UpdateCategoryDto,
-  ) {
-    return this.categoryService.update(+id, updateCategoryDto);
+    @Body() dto: UpdateCategoryDto,
+    @UploadedFile() image: Express.Multer.File,
+  ): Promise<CategoryEntity> {
+    return this.categoryService.update(+id, dto, image);
   }
 
-  @Delete(':id')
+  // @Roles('admin')
+  // @UseGuards(RolesGuard)
+  // @UseGuards(JwtAuthGuard)
+  // @ApiBearerAuth()
+  // @Patch(':id')
+  // update(
+  //   @Param('id') id: string,
+  //   @Body() updateCategoryDto: UpdateCategoryDto,
+  // ) {
+  //   return this.categoryService.update(+id, updateCategoryDto);
+  // }
+
+  @Roles('admin')
+  @UseGuards(RolesGuard)
+  @UseGuards(JwtAuthGuard)
   @ApiBearerAuth()
+  @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.categoryService.remove(+id);
+    return this.categoryService.delete(+id);
   }
 }

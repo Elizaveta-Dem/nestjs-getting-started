@@ -1,11 +1,12 @@
 /* eslint-disable prettier/prettier */
 import { CartEntity } from 'src/cart/entities/cart.entity';
 import { OrderItemEntity } from 'src/order/entities/orderitem.entity';
-// import { OrderItemEntity } from 'src/order/entities/orderitem.entity';
+import { Role } from 'src/role/entities/role.entity';
 import {
     Column,
     CreateDateColumn,
     Entity,
+    ManyToOne,
     OneToOne,
     PrimaryGeneratedColumn,
     UpdateDateColumn,
@@ -17,7 +18,7 @@ import {
     id: number;
   
     @Column({ unique: true })
-    username: string;
+    email: string;
   
     @Column()
     password: string;
@@ -34,4 +35,7 @@ import {
 
     @OneToOne(() => OrderItemEntity, orderItem => orderItem.users) 
     orderItem: OrderItemEntity[];
+    
+    @ManyToOne(() => Role, (role) => role.user)
+    role: Role;
   }
